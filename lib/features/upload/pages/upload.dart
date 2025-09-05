@@ -6,11 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:taskati/core/costants/app_images.dart';
 import 'package:taskati/core/functions/dialogs.dart';
 import 'package:taskati/core/functions/navigator.dart';
+import 'package:taskati/core/services/local_service.dart';
 import 'package:taskati/core/text/text_style.dart';
 import 'package:taskati/core/utils/color.dart';
 import 'package:taskati/core/widgets/custom_text_form_field.dart';
 import 'package:taskati/core/widgets/main_buttom.dart';
-import 'package:taskati/features/add_task/pages/add_task.dart';
+import 'package:taskati/features/home/pages/home_screen.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -31,7 +32,8 @@ class _UploadScreenState extends State<UploadScreen> {
           TextButton(
             onPressed: () {
               if (imagePath.isNotEmpty && nameController.text.isNotEmpty) {
-                pushTo(context, AddTaskScreen());
+                LocalHelper.putUserData(nameController.text, imagePath);
+                pushWithReplacement(context, HomeScreen());
               } else if (imagePath.isNotEmpty && nameController.text.isEmpty) {
                 showErrorDialog(context, 'Please Enter Your Name');
               } else if (imagePath.isEmpty && nameController.text.isNotEmpty) {

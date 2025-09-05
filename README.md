@@ -22,6 +22,7 @@ It allows you to upload your profile, add tasks, and manage them efficiently.
 
 ### Splash & Upload Screen & Add Task Screen
 ![Splash & Upload & Add Task](first_screen.png)
+![home](home_screen.png)
 
 
 ---

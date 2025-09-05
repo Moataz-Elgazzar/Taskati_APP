@@ -3,8 +3,10 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:taskati/core/costants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
+import 'package:taskati/core/services/local_service.dart';
 import 'package:taskati/core/text/text_style.dart';
 import 'package:taskati/core/utils/color.dart';
+import 'package:taskati/features/home/pages/home_screen.dart';
 import 'package:taskati/features/upload/pages/upload.dart';
 
 class Splash extends StatefulWidget {
@@ -15,12 +17,12 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds:3) , () {
-      pushWithReplacement(context, UploadScreen());
+    bool isUploaded = LocalHelper.getData(LocalHelper.kIsUploaded) ?? false;
+    Future.delayed(Duration(seconds: 3), () {
+      (isUploaded) ? pushWithReplacement(context, HomeScreen()) : pushWithReplacement(context, UploadScreen());
     });
   }
 

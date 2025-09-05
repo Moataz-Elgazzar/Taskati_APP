@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:taskati/core/costants/app_fonts.dart';
+import 'package:taskati/core/services/local_service.dart';
 import 'package:taskati/core/utils/color.dart';
 import 'package:taskati/features/splash/pages/splash.dart';
 
-void main() {
+Future<void> main() async{
+  await Hive.initFlutter();
+  await LocalHelper.init();
   runApp(const MainApp());
 }
 
