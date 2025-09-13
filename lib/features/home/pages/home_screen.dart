@@ -1,28 +1,38 @@
 import 'dart:io';
 
+import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:taskati/core/costants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
+import 'package:taskati/core/models/task_model.dart';
 import 'package:taskati/core/services/local_service.dart';
 import 'package:taskati/core/text/text_style.dart';
 import 'package:taskati/core/utils/color.dart';
 import 'package:taskati/core/widgets/main_buttom.dart';
 import 'package:taskati/features/add_task/pages/add_task.dart';
+import 'package:taskati/features/home/widgets/task_item.dart';
+import 'package:taskati/features/profile/edit_profile.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -33,12 +43,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Hello, ${LocalHelper.getData(LocalHelper.kName)}', style: TextStyles.titleStyle(color: AppColors.blueColor, fontSize: 25)),
+                        ValueListenableBuilder(
+                            valueListenable: LocalHelper.userBox.listenable(),
+                            builder: (context, box, child) {
+                              String? nameController = box.get(LocalHelper.kName);
+                              return Text('Hello, ${nameController}', style: TextStyles.titleStyle(color: AppColors.blueColor, fontSize: 25));
+                            }),
                         Text('Have A Nice Day', style: TextStyles.subTitleStyle(color: AppColors.blackColor)),
                       ],
                     ),
                   ),
-                  CircleAvatar(radius: 30, backgroundColor: AppColors.blueColor, backgroundImage: LocalHelper.getData(LocalHelper.kImage) != null ? FileImage(File(LocalHelper.getData(LocalHelper.kImage))) : AssetImage(AppImages.user)),
+                  InkWell(
+                    onTap: () {
+                      pushTo(context, EditProfile());
+                    },
+                    child: ValueListenableBuilder(
+                        valueListenable: LocalHelper.userBox.listenable(),
+                        builder: (context, box, child) {
+                          String? imagePath = box.get(LocalHelper.kImage);
+                          return CircleAvatar(
+                            radius: 30,
+                            backgroundColor: AppColors.blueColor,
+                            backgroundImage: imagePath != null ? FileImage(File(imagePath)) : AssetImage(AppImages.user) as ImageProvider,
+                          );
+                        }),
+                  ),
                 ],
               ),
               Gap(30),
@@ -51,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('Today', style: TextStyles.titleStyle(color: AppColors.blackColor, fontSize: 20)),
                     ],
                   ),
-                  Gap(40),
+                  Gap(30),
                   Expanded(
                     child: MainButtom(
                       text: '+ Add Task',
@@ -61,6 +90,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ],
+              ),
+              Gap(20),
+              DatePicker(
+                width: 70,
+                height: 100,
+                DateTime.now(),
+                initialSelectedDate: DateTime.now(),
+                selectionColor: AppColors.blueColor,
+                selectedTextColor: Colors.white,
+                onDateChange: (date) {
+                  setState(() {
+                    selectedDate = DateFormat('dd-MM-yyyy').format(date);
+                  });
+                },
+              ),
+              Gap(20),
+              Expanded(
+                child: ValueListenableBuilder(
+                    valueListenable: LocalHelper.taskBox.listenable(),
+                    builder: (context, box, child) {
+                      List<TaskModel> tasks = [];
+                      for (var task in box.values) {
+                        if (task.date == selectedDate) {
+                          tasks.add(task);
+                        }
+                      }
+                      return ListView.separated(
+                        itemBuilder: (context, index) => TaskItem(model: tasks[index]),
+                        separatorBuilder: (context, index) => SizedBox(height: 10),
+                        itemCount: tasks.length,
+                      );
+                    }),
               ),
             ],
           ),

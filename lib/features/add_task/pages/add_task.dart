@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:taskati/core/costants/color_task.dart';
 import 'package:taskati/core/functions/navigator.dart';
+import 'package:taskati/core/models/task_model.dart';
+import 'package:taskati/core/services/local_service.dart';
 import 'package:taskati/core/text/text_style.dart';
 import 'package:taskati/core/utils/color.dart';
 import 'package:taskati/core/widgets/label_Text.dart';
 import 'package:taskati/core/widgets/main_buttom.dart';
+import 'package:taskati/features/home/pages/home_screen.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -21,7 +25,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   var starttimecontroller = TextEditingController(text: DateFormat('hh:mm a').format(DateTime.now()));
   var endtimecontroller = TextEditingController(text: DateFormat('hh:mm a').format(DateTime.now().add(const Duration(hours: 1))));
   var formkey = GlobalKey<FormState>();
-  List<Color> colors = [AppColors.blueColor, AppColors.orangeColor, AppColors.redColor];
+  
   int currentIndex = 0;
 
   @override
@@ -55,18 +59,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   },
                 ),
                 Gap(10),
-                LabelText(
-                  controller: descriptioncontroller,
-                  hint: 'Enter Description',
-                  title: 'Description',
-                  maxLines: 3,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please Enter Description';
-                    }
-                    return null;
-                  },
-                ),
+                LabelText(controller: descriptioncontroller, hint: 'Enter Description', title: 'Description', maxLines: 3),
                 Gap(10),
                 LabelText(
                   controller: datecontroller,
@@ -78,15 +71,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       datecontroller.text = DateFormat('dd-MM-yyyy').format(selectedDate);
                     }
                   },
-
                   readOnly: true,
                   suffix: Icon(Icons.calendar_month, color: AppColors.blueColor),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please Enter Date';
-                    }
-                    return null;
-                  },
                 ),
                 Gap(10),
                 Row(
@@ -104,12 +90,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         hint: 'Enter Time',
                         title: 'Start Time',
                         suffix: Icon(Icons.access_time_outlined, color: AppColors.blueColor),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please Enter Time';
-                          }
-                          return null;
-                        },
                       ),
                     ),
                     Gap(10),
@@ -126,12 +106,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         hint: 'Enter Time',
                         title: 'End Time',
                         suffix: Icon(Icons.access_time_outlined, color: AppColors.blueColor),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please Enter Time';
-                          }
-                          return null;
-                        },
                       ),
                     ),
                   ],
@@ -158,12 +132,30 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   }),
                 ),
                 Gap(40),
-                MainButtom(
-                  text: 'Creat Task',
-                  onPressed: () {
-                    if (formkey.currentState!.validate()) {}
-                  },
-                  width: double.infinity,
+                Padding(
+                  padding: const EdgeInsets.only(top: 120),
+                  child: MainButtom(
+                    text: 'Creat Task',
+                    onPressed: () async {
+                      if (formkey.currentState!.validate()) {
+                        String id = titlecontroller.text + datecontroller.text + endtimecontroller.text;
+                        await LocalHelper.putTask(
+                            id,
+                            TaskModel(
+                              id: id,
+                              title: titlecontroller.text,
+                              description: descriptioncontroller.text,
+                              date: datecontroller.text,
+                              startTime: starttimecontroller.text,
+                              endTime: endtimecontroller.text,
+                              color: currentIndex,
+                              isCompleted: false,
+                            ));
+                        pushAndRemoveUntil(context, HomeScreen());
+                      }
+                    },
+                    width: double.infinity,
+                  ),
                 ),
               ],
             ),

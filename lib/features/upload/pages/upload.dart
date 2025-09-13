@@ -53,7 +53,13 @@ class _UploadScreenState extends State<UploadScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(radius: 90, backgroundColor: AppColors.wightColor, backgroundImage: imagePath.isNotEmpty ? FileImage(File(imagePath)) : AssetImage(AppImages.user)),
+                CircleAvatar(
+                  radius: 90,
+                  backgroundColor: AppColors.wightColor,
+                  backgroundImage: imagePath.isNotEmpty
+                      ? FileImage(File(imagePath))
+                      : AssetImage(AppImages.user) as ImageProvider<Object>,
+                ),
                 Gap(20),
                 MainButtom(
                   text: 'Upload From Camera',

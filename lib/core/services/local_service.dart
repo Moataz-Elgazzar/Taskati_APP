@@ -1,22 +1,33 @@
 import 'package:hive/hive.dart';
+import 'package:taskati/core/models/task_model.dart';
 
 class LocalHelper {
   static late Box userBox;
+  static late Box<TaskModel> taskBox;
   static String kName = 'name';
   static String kImage = 'image';
   static String kIsUploaded = 'isUploaded';
 
   static init() async {
-    await Hive.openBox('user Box');
-    userBox = Hive.box('user Box');
+    Hive.registerAdapter<TaskModel>(TaskModelAdapter());
+    userBox = await Hive.openBox('userBox');
+    taskBox = await Hive.openBox<TaskModel>('taskBox');
   }
 
   static putData(String key, dynamic value) {
-    return userBox.put(key, value);
+    userBox.put(key, value);
   }
 
   static getData(String key) {
     return userBox.get(key);
+  }
+
+  static putTask(String key, TaskModel value) {
+    taskBox.put(key, value);
+  }
+
+  static TaskModel? getTask(String key) {
+    return taskBox.get(key);
   }
 
   static putUserData(String name, String image) {
