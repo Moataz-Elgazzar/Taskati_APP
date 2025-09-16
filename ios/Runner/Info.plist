@@ -16,6 +16,16 @@
 	<string>taskati</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>UIBackgroundModes</key>
+	<array>
+  		<string>fetch</string>
+  		<string>remote-notification</string>
+	</array>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We need access to your calendar</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>We need access to reminders</string>
+
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

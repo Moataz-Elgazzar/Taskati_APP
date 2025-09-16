@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:taskati/core/costants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
 import 'package:taskati/core/models/task_model.dart';
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               String? nameController = box.get(LocalHelper.kName);
                               return Text('Hello, ${nameController}', style: TextStyles.titleStyle(color: AppColors.blueColor, fontSize: 25));
                             }),
-                        Text('Have A Nice Day', style: TextStyles.subTitleStyle(color: AppColors.blackColor)),
+                        Text('Have A Nice Day', style: TextStyles.subTitleStyle()),
                       ],
                     ),
                   ),
@@ -76,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(DateFormat.yMMMMd().format(DateTime.now()), style: TextStyles.titleStyle(color: AppColors.blackColor, fontSize: 20)),
-                      Text('Today', style: TextStyles.titleStyle(color: AppColors.blackColor, fontSize: 20)),
+                      Text(DateFormat.yMMMMd().format(DateTime.now()), style: TextStyles.titleStyle(fontSize: 20)),
+                      Text('Today', style: TextStyles.titleStyle(fontSize: 20)),
                     ],
                   ),
                   Gap(30),
@@ -99,6 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 initialSelectedDate: DateTime.now(),
                 selectionColor: AppColors.blueColor,
                 selectedTextColor: Colors.white,
+                dayTextStyle: TextStyles.subTitleStyle(fontSize: 18),
+                dateTextStyle: TextStyles.subTitleStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                monthTextStyle: TextStyles.subTitleStyle(fontSize: 18),
                 onDateChange: (date) {
                   setState(() {
                     selectedDate = DateFormat('dd-MM-yyyy').format(date);
@@ -116,8 +120,62 @@ class _HomeScreenState extends State<HomeScreen> {
                           tasks.add(task);
                         }
                       }
+                      if (tasks.isEmpty) {
+                        return Column(
+                          children: [
+                            Lottie.asset(AppImages.empty),
+                            Gap(20),
+                            Text(
+                              'You don\'t have any task yet!\nAdd new tasks to make your day productive.',
+                              style: TextStyles.subTitleStyle(),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        );
+                      }
                       return ListView.separated(
-                        itemBuilder: (context, index) => TaskItem(model: tasks[index]),
+                        itemBuilder: (context, index) => TaskItem(
+                          model: tasks[index],
+                          onComplete: () {
+                            box.put(tasks[index].id, tasks[index].copyWith(isCompleted: true));
+                          },
+                          onDelete: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog.adaptive(
+                                    title: Text(
+                                      'Delete Task',
+                                      style: TextStyles.titleStyle(color: AppColors.blackColor),
+                                    ),
+                                    content: Text(
+                                      'Are you sure ?',
+                                      style: TextStyles.subTitleStyle(color: AppColors.blackColor),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            box.delete(tasks[index].id);
+                                            pop(context);
+                                          },
+                                          child: Text(
+                                            'Delete',
+                                            style: TextStyles.smallStyle(color: AppColors.blackColor),
+                                          )),
+                                      TextButton(
+                                          onPressed: () {
+                                            setState(() {});
+                                            Navigator.of(context, rootNavigator: true).pop();
+                                          },
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyles.smallStyle(color: AppColors.blackColor),
+                                          ))
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
                         separatorBuilder: (context, index) => SizedBox(height: 10),
                         itemCount: tasks.length,
                       );

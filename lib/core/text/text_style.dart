@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:taskati/core/utils/color.dart';
 
 class TextStyles {
   static TextStyle titleStyle({
@@ -8,12 +7,11 @@ class TextStyles {
     FontWeight fontWeight = FontWeight.bold,
   }) {
     return TextStyle(
-      color: color ?? AppColors.blackColor,
+      color: color,
       fontSize: fontSize,
       fontWeight: fontWeight,
     );
   }
-
 
   static TextStyle subTitleStyle({
     Color? color,
@@ -21,12 +19,11 @@ class TextStyles {
     FontWeight fontWeight = FontWeight.normal,
   }) {
     return TextStyle(
-      color: color ?? AppColors.blackColor,
+      color: color,
       fontSize: fontSize,
       fontWeight: fontWeight,
     );
   }
-
 
   static TextStyle smallStyle({
     Color? color,
@@ -34,10 +31,9 @@ class TextStyles {
     FontWeight fontWeight = FontWeight.normal,
   }) {
     return TextStyle(
-      color: color ?? AppColors.greyColor,
+      color: color,
       fontSize: fontSize,
       fontWeight: fontWeight,
     );
   }
-  
 }

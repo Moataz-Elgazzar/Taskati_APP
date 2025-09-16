@@ -24,4 +24,18 @@ class TaskModel {
   bool? isCompleted;
 
   TaskModel({this.id, this.title, this.description, this.date, this.startTime, this.endTime, this.color ,this.isCompleted});
+
+  TaskModel copyWith({
+    String? title,
+    String? description,
+    String? date,
+    String? startTime,
+    String? endTime,
+    int? color,
+    bool? isCompleted,
+  }){
+   return TaskModel(id: id , title: title?? this.title , description: description?? this.description , date: date?? this.date
+   ,startTime: startTime?? this.startTime , endTime: endTime?? this.endTime , color: color?? this.color , isCompleted: isCompleted?? this.isCompleted
+   );
+  }
 }

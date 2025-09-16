@@ -33,8 +33,14 @@ class _EditProfileState extends State<EditProfile> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.sunny, color: AppColors.blueColor),
-            onPressed: () {},
+            icon: Icon(
+              Icons.dark_mode,
+              color: AppColors.blueColor,
+              size: 40,
+            ),
+            onPressed: () {
+              LocalHelper.casheTheme();
+            },
           ),
         ],
       ),
@@ -52,7 +58,7 @@ class _EditProfileState extends State<EditProfile> {
                         builder: (context) => Container(
                               width: double.infinity,
                               height: 200,
-                              decoration: BoxDecoration(color: AppColors.wightColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                              decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
@@ -62,7 +68,9 @@ class _EditProfileState extends State<EditProfile> {
                                       text: 'Update From Camera',
                                       onPressed: () async {
                                         await uploadImage(isCamera: true);
-                                        LocalHelper.putData(LocalHelper.kImage, imagePath);
+                                        if (imagePath.isNotEmpty) {
+                                          LocalHelper.putData(LocalHelper.kImage, imagePath);
+                                        }
                                         pop(context);
                                       },
                                     ),
@@ -72,7 +80,9 @@ class _EditProfileState extends State<EditProfile> {
                                       text: 'Update From Gallery',
                                       onPressed: () async {
                                         await uploadImage(isCamera: false);
-                                        LocalHelper.putData(LocalHelper.kImage, imagePath);
+                                        if (imagePath.isNotEmpty) {
+                                          LocalHelper.putData(LocalHelper.kImage, imagePath);
+                                        }
                                         pop(context);
                                       },
                                     ),
@@ -84,7 +94,7 @@ class _EditProfileState extends State<EditProfile> {
                   child: CircleAvatar(
                     radius: 90,
                     backgroundColor: AppColors.wightColor,
-                    backgroundImage: LocalHelper.getData(LocalHelper.kImage) != null ? FileImage(File(LocalHelper.getData(LocalHelper.kImage))) : AssetImage(AppImages.user) as ImageProvider<Object>,
+                    backgroundImage: ((LocalHelper.getData(LocalHelper.kImage) != null) && (LocalHelper.getData(LocalHelper.kImage) as String).isNotEmpty) ? FileImage(File(LocalHelper.getData(LocalHelper.kImage))) : AssetImage(AppImages.user) as ImageProvider<Object>,
                   ),
                 ),
                 Positioned(
@@ -121,7 +131,7 @@ class _EditProfileState extends State<EditProfile> {
                               child: Container(
                                 width: double.infinity,
                                 height: 200,
-                                decoration: BoxDecoration(color: AppColors.wightColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                                decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
                                 child: Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Column(
@@ -157,10 +167,10 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<void> uploadImage({required bool isCamera}) async {
     XFile? file = await ImagePicker().pickImage(source: isCamera ? ImageSource.camera : ImageSource.gallery);
-    setState(() {
-      if (file != null) {
+    if (file != null) {
+      setState(() {
         imagePath = file.path;
-      }
-    });
+      });
+    }
   }
 }

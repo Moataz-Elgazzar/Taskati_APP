@@ -15,15 +15,19 @@ It allows you to upload your profile, add tasks, and manage them efficiently.
 - Validation for inputs (name, date, etc.)
 - Reusable widgets (custom text fields, buttons, labels)
 - Error dialogs for missing inputs
+- Add or Edit Tasks
+- Dark Mode
+- Edit Username and Userprofile
 
 ---
 
 ## 📸 Screenshots
 
-### Splash & Upload Screen & Add Task Screen
+### Splash & Upload Screen & Add Task Screen & Edit Profile
 ![Splash & Upload & Add Task](first_screen.png)
 ![profile](screen_edit_name_image.png)
 ![home & profile](screen_task_edit_profile.png)
+![dark mode](dark_screen.png)
 
 
 ---
@@ -49,6 +53,8 @@ It allows you to upload your profile, add tasks, and manage them efficiently.
 │── features/
 │   ├── splash/
 │   ├── upload/
+│   ├── home/
+│   ├── profile
 │   └── add_task/
 
 

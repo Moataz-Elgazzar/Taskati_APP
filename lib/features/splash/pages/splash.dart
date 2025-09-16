@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:taskati/core/costants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
@@ -17,9 +18,27 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  void _clearOldTask() {
+    final box = LocalHelper.taskBox;
+    final today = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+    final keyToDelete = <dynamic>[];
+
+    for (var task in box.values) {
+      if ((task.date?.compareTo(today) ?? 1) < 0) {
+        keyToDelete.add(task.id);
+      }
+    }
+
+    for (var key in keyToDelete) {
+      box.delete(key);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _clearOldTask();
     bool isUploaded = LocalHelper.getData(LocalHelper.kIsUploaded) ?? false;
     Future.delayed(Duration(seconds: 3), () {
       (isUploaded) ? pushWithReplacement(context, HomeScreen()) : pushWithReplacement(context, UploadScreen());

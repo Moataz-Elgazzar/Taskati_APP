@@ -56,9 +56,7 @@ class _UploadScreenState extends State<UploadScreen> {
                 CircleAvatar(
                   radius: 90,
                   backgroundColor: AppColors.wightColor,
-                  backgroundImage: imagePath.isNotEmpty
-                      ? FileImage(File(imagePath))
-                      : AssetImage(AppImages.user) as ImageProvider<Object>,
+                  backgroundImage: imagePath.isNotEmpty ? FileImage(File(imagePath)) : AssetImage(AppImages.user) as ImageProvider<Object>,
                 ),
                 Gap(20),
                 MainButtom(
@@ -88,10 +86,10 @@ class _UploadScreenState extends State<UploadScreen> {
 
   Future<void> uploadImage({required bool isCamera}) async {
     XFile? file = await ImagePicker().pickImage(source: isCamera ? ImageSource.camera : ImageSource.gallery);
-    setState(() {
-      if (file != null) {
+    if (file != null) {
+      setState(() {
         imagePath = file.path;
-      }
-    });
+      });
+    }
   }
 }

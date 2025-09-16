@@ -12,7 +12,8 @@ import 'package:taskati/core/widgets/main_buttom.dart';
 import 'package:taskati/features/home/pages/home_screen.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({super.key});
+  const AddTaskScreen({super.key, this.model});
+  final TaskModel? model;
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
@@ -21,12 +22,23 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   var titlecontroller = TextEditingController();
   var descriptioncontroller = TextEditingController();
-  var datecontroller = TextEditingController(text: DateFormat('dd-MM-yyyy').format(DateTime.now()));
-  var starttimecontroller = TextEditingController(text: DateFormat('hh:mm a').format(DateTime.now()));
-  var endtimecontroller = TextEditingController(text: DateFormat('hh:mm a').format(DateTime.now().add(const Duration(hours: 1))));
+  var datecontroller = TextEditingController();
+  var starttimecontroller = TextEditingController();
+  var endtimecontroller = TextEditingController();
   var formkey = GlobalKey<FormState>();
-  
+
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    titlecontroller.text = widget.model?.title ?? '';
+    descriptioncontroller.text = widget.model?.description ?? '';
+    datecontroller.text = widget.model?.date ?? DateFormat('dd-MM-yyyy').format(DateTime.now());
+    starttimecontroller.text = widget.model?.startTime ?? DateFormat('hh:mm a').format(DateTime.now());
+    endtimecontroller.text = widget.model?.endTime ?? DateFormat('hh:mm a').format(DateTime.now().add(const Duration(hours: 1)));
+    currentIndex = widget.model?.color ?? 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +50,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             pop(context);
           },
         ),
-        title: Text('Add Task', style: TextStyles.titleStyle(color: AppColors.blueColor)),
+        title: Text(widget.model != null ? 'Edit Task' : 'Add Task', style: TextStyles.titleStyle(color: AppColors.blueColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -135,10 +147,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 120),
                   child: MainButtom(
-                    text: 'Creat Task',
+                    text: widget.model != null ? 'Update Task' : 'Creat Task',
                     onPressed: () async {
                       if (formkey.currentState!.validate()) {
-                        String id = titlecontroller.text + datecontroller.text + endtimecontroller.text;
+                        String id = widget.model != null ? widget.model?.id ?? '' : titlecontroller.text + datecontroller.text + endtimecontroller.text;
                         await LocalHelper.putTask(
                             id,
                             TaskModel(
@@ -151,6 +163,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               color: currentIndex,
                               isCompleted: false,
                             ));
+                        
+
                         pushAndRemoveUntil(context, HomeScreen());
                       }
                     },
@@ -164,4 +178,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       ),
     );
   }
+
+
 }
