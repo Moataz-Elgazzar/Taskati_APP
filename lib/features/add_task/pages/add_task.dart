@@ -163,7 +163,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               color: currentIndex,
                               isCompleted: false,
                             ));
-                        
 
                         pushAndRemoveUntil(context, HomeScreen());
                       }
@@ -178,6 +177,4 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       ),
     );
   }
-
-
 }

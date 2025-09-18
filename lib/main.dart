@@ -5,7 +5,6 @@ import 'package:taskati/core/utils/theme.dart';
 import 'package:taskati/features/splash/pages/splash.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await LocalHelper.init();
   runApp(const MainApp());
