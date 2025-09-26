@@ -57,6 +57,9 @@ It allows you to upload your profile, add tasks, and manage them efficiently.
 │   ├── profile
 │   └── add_task/
 
+###Try the app (Android Release APK):
+https://drive.google.com/file/d/1FxhddL60Yqv4bMhr8_CmsY2dx1CTw9Cl/view
+
 
 - [LinkedIn](https://www.linkedin.com/in/moataz-mahmoud-a2a548a6/)  
 - [Codeforces](https://codeforces.com/profile/El-Gazzar)
